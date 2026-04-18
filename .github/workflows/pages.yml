@@ -14,6 +14,8 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v4
+      - name: Copy CNAME to deploy folder
+        run: cp CNAME datemarket_v5/CNAME
       - uses: actions/configure-pages@v4
         with:
           token: ${{ secrets.PAGES_TOKEN }}
