@@ -28,7 +28,17 @@
 
 После этого сайт будет доступен по вашему домену.
 
-> Пример бесплатного варианта: `https://ваш-пользователь.github.io/<ваш-репозиторий>/` работает сразу, а `example.com` станет вашим нормальным именем.
+## Настройка GitHub Pages через workflow
+
+Если на вашей странице настроек нет нужных опций, используйте Personal Access Token:
+
+1. Создайте токен на GitHub: `Settings` → `Developer settings` → `Personal access tokens` → `Tokens (classic)` → `Generate new token`.
+2. Дайте ему права `repo` или `pages:write`.
+3. В репозитории добавьте секрет `PAGES_TOKEN`:
+   - `Settings` → `Secrets and variables` → `Actions` → `New repository secret`
+   - имя: `PAGES_TOKEN`
+   - значение: ваш токен
+4. Затем пушьте изменения — workflow сам включит GitHub Pages.
 
 ## Папка сайта
 
