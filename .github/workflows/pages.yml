@@ -8,19 +8,16 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
     steps:
       - uses: actions/checkout@v4
-      - name: Copy CNAME to deploy folder
-        run: cp CNAME datemarket_v5/CNAME
-      - uses: actions/configure-pages@v4
+      - name: Deploy to gh-pages
+        run: |
+          mkdir -p /tmp/gh-pages
+          cp -r datemarket_v5/* /tmp/gh-pages/
+          cp CNAME /tmp/gh-pages/
+      - name: Push to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          token: ${{ secrets.PAGES_TOKEN }}
-          enablement: true
-      - uses: actions/upload-pages-artifact@v5
-        with:
-          path: datemarket_v5
-      - uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.PAGES_TOKEN || secrets.GITHUB_TOKEN }}
+          publish_dir: /tmp/gh-pages
+          cname: datemarket.ru
