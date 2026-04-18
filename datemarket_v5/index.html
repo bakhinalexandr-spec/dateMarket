@@ -86,7 +86,7 @@ textarea.form-input{resize:vertical;min-height:80px}
 <!-- ══ DASHBOARD ══ -->
 <div class="page active" id="page-dashboard">
   <div class="home-page">
-    <div class="home-hero">
+    <div class="hero" style="background-image: linear-gradient(135deg, rgba(0,0,0,0.1), rgba(0,0,0,0.3)), url('https://source.unsplash.com/1200x600/?dating,couple,love'); background-size: cover; background-position: center;">
       <div>
         <div class="hero-tag">Рынок знакомств</div>
         <h1 class="hero-title">Конкурируй, оценивай, побеждай</h1>
@@ -100,6 +100,13 @@ textarea.form-input{resize:vertical;min-height:80px}
         <div class="hero-card-title">Город сегодня</div>
         <div class="hero-card-city" id="homeCityName">Москва</div>
         <div class="hero-card-sub" id="homeCitySub">847 анкет · максимум шансов</div>
+        <div class="hero-card-profile">
+          <img id="heroCardPhoto" src="https://i.pravatar.cc/100?img=1" alt="Топ профиль" style="width:60px;height:60px;border-radius:50%;object-fit:cover;border:2px solid var(--surface);">
+          <div>
+            <div style="font-size:12px;color:var(--faint);margin-bottom:2px">Топ профиля</div>
+            <div style="font-size:14px;font-weight:500" id="heroCardProfileName">Анна, 27</div>
+          </div>
+        </div>
         <div class="hero-card-metrics">
           <div class="hero-metric">
             <div class="hero-metric-label">Онлайн сейчас</div>

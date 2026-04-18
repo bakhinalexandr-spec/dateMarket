@@ -29,10 +29,13 @@ function applyProfilesFilter() {
 
 function bigProfileCardHTML(p) {
   const physique = (p.height || p.weight) ? `<div class="pbc-physique">${p.height ? p.height + ' см' : ''}${p.height && p.weight ? ' · ' : ''}${p.weight ? p.weight + ' кг' : ''}</div>` : '';
+  const photoHTML = p.photo
+    ? `<img src="${p.photo}" alt="${p.name}" loading="lazy">`
+    : `<span>${p.emoji}</span>`;
   return `
     <div class="profile-big-card" onclick="navigate('profile-detail', {profile: ${p.id}})">
       <div class="pbc-photo ${p.male ? 'pbc-photo-m' : 'pbc-photo-f'}">
-        <span>${p.emoji}</span>
+        ${photoHTML}
         ${p.online ? '<div class="pbc-online"><span class="online-dot"></span>онлайн</div>' : ''}
       </div>
       <div class="pbc-body">
@@ -53,8 +56,19 @@ function renderProfileDetail(id) {
   const p = getProfile(id);
   if (!p) return;
 
-  document.getElementById('pd-avatar').textContent = p.init;
-  document.getElementById('pd-avatar').className = 'pd-avatar' + (p.male ? ' m' : '');
+  const pdAvatar = document.getElementById('pd-avatar');
+  pdAvatar.className = 'pd-avatar' + (p.male ? ' m' : '');
+  if (p.photo) {
+    pdAvatar.textContent = '';
+    pdAvatar.style.backgroundImage = `url(${p.photo})`;
+    pdAvatar.style.backgroundSize = 'cover';
+    pdAvatar.style.backgroundPosition = 'center';
+    pdAvatar.style.color = 'transparent';
+  } else {
+    pdAvatar.textContent = p.init;
+    pdAvatar.style.backgroundImage = '';
+    pdAvatar.style.color = '';
+  }
   document.getElementById('pd-rank').textContent = '#' + p.rank + ' в рейтинге';
   document.getElementById('pd-name').textContent = p.name + ', ' + p.age;
   document.getElementById('pd-city').textContent = p.city + ' · уровень ' + p.level;

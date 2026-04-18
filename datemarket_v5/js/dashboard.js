@@ -42,6 +42,13 @@ function renderDashboard() {
   document.getElementById('topMaleWealth').textContent = '7.5';
   document.getElementById('topMaleMsgs').textContent = '156';
 
+  // Add top profile photo to hero card
+  const topProfile = cp.all.sort((a, b) => b.likes - a.likes)[0];
+  if (topProfile) {
+    document.getElementById('heroCardPhoto').src = topProfile.photo || 'https://i.pravatar.cc/100?img=1';
+    document.getElementById('heroCardProfileName').textContent = `${topProfile.name}, ${topProfile.age}`;
+  }
+
   document.querySelectorAll('.city-option').forEach(o => {
     o.classList.toggle('active', o.dataset.city === State.activeCity);
   });
@@ -62,6 +69,7 @@ function renderCityCards() {
   if (!grid) return;
   grid.innerHTML = Object.values(CITIES).map(city => `
     <div class="city-card">
+      <div class="city-photo" style="background-image: url('https://source.unsplash.com/400x200/?${city.name === 'Москва' ? 'moscow' : city.name === 'Санкт-Петербург' ? 'saint-petersburg' : city.name === 'Казань' ? 'kazan' : city.name === 'Екатеринбург' ? 'yekaterinburg' : 'novosibirsk'},city,night')"></div>
       <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
         <h4>${city.name}</h4>
         <span class="city-badge">${city.count}</span>
@@ -107,10 +115,13 @@ function profileCardHTML(p, active = false) {
   const wroteTag = (!p.male && p.wrote)
     ? `<div style="margin-top:6px;font-size:10px;color:var(--blue)">👥 ${p.wrote} написало сегодня</div>`
     : '';
+  const photoHTML = p.photo
+    ? `<img class="profile-photo" src="${p.photo}" alt="${p.name}" loading="lazy">`
+    : `<div class="profile-avatar${p.male ? ' m' : ''}">${p.init}</div>`;
   return `
     <div class="profile-card${active ? ' active' : ''}" onclick="navigate('profile-detail', {profile: ${p.id}})">
       <div class="profile-photo-area">
-        <div class="profile-avatar${p.male ? ' m' : ''}">${p.init}</div>
+        ${photoHTML}
         <div class="rank-tag">#${p.rank}</div>
       </div>
       <div class="profile-name">${p.name}, ${p.age}</div>
