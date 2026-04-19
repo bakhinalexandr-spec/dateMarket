@@ -43,7 +43,7 @@ function renderDashboard() {
     o.classList.toggle('active', o.dataset.city === State.activeCity);
   });
 
-  renderHomeProfiles(cp.all);
+  renderHomeProfiles(cp.all.length ? cp.all : allProfiles());
   renderCityCards();
 }
 
