@@ -211,14 +211,18 @@ async function toggleLike(profileId) {
   if (!State.auth) { openModal('modal-login'); return; }
   if (State.auth.id === profileId) { showNotif('Нельзя лайкнуть себя'); return; }
 
-  const { data: existing } = await sb.from('likes')
+  const { data: existing, error: selErr } = await sb.from('likes')
     .select('id').eq('from_user', State.auth.id).eq('to_user', profileId)
     .maybeSingle();
 
+  if (selErr) { showNotif('Ошибка: ' + selErr.message); console.error('like select:', selErr); return; }
+
   if (existing) {
-    await sb.from('likes').delete().eq('id', existing.id);
+    const { error: delErr } = await sb.from('likes').delete().eq('id', existing.id);
+    if (delErr) { showNotif('Ошибка: ' + delErr.message); console.error('like delete:', delErr); return; }
   } else {
-    await sb.from('likes').insert({ from_user: State.auth.id, to_user: profileId });
+    const { error: insErr } = await sb.from('likes').insert({ from_user: State.auth.id, to_user: profileId });
+    if (insErr) { showNotif('Ошибка: ' + insErr.message); console.error('like insert:', insErr); return; }
   }
 
   renderLikeBtn(profileId);
