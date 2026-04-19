@@ -10,9 +10,6 @@ function renderDashboard() {
   document.getElementById('homeOnline').textContent = d.online;
   document.getElementById('homeNew24').textContent = ps.new24;
   document.getElementById('homeReply').textContent = d.reply + '%';
-  document.getElementById('homeMarketOnline').textContent = d.online;
-  document.getElementById('homeMarketNew').textContent = ps.new24;
-  document.getElementById('homeMarketRatio').textContent = d.ratio;
 
   // New dashboard elements
   const totalUsers = ps.total || 14230;
