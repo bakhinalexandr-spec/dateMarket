@@ -59,7 +59,7 @@ function bigProfileCardHTML(p) {
     ? `<img src="${p.photo}" alt="${p.name}" loading="lazy">`
     : `<span>${p.emoji}</span>`;
   return `
-    <div class="profile-big-card" onclick="navigate('profile-detail', {profile: ${p.id}})">
+    <div class="profile-big-card" onclick="navigate('profile-detail', {profile: '${p.id}'})">
       <div class="pbc-photo ${p.male ? 'pbc-photo-m' : 'pbc-photo-f'}">
         ${photoHTML}
         ${p.online ? '<div class="pbc-online"><span class="online-dot"></span>онлайн</div>' : ''}
@@ -162,7 +162,7 @@ function renderProfileDetail(id) {
   const idx = sorted.findIndex(x => x.rank === p.rank);
   const nb = sorted.slice(Math.max(0, idx - 2), Math.max(0, idx - 2) + 5);
   document.getElementById('pd-neighbours').innerHTML = nb.map(n => `
-    <div style="display:grid;grid-template-columns:30px 28px 1fr auto;gap:6px;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);cursor:pointer" onclick="navigate('profile-detail',{profile:${n.id}})">
+    <div style="display:grid;grid-template-columns:30px 28px 1fr auto;gap:6px;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);cursor:pointer" onclick="navigate('profile-detail',{profile:'${n.id}'})">
       <div style="font-size:10px;color:${n.id===id?'var(--text)':'var(--faint)'};font-weight:${n.id===id?500:400}">#${n.rank}</div>
       <div style="width:22px;height:22px;border-radius:50%;background:${n.male?'var(--blue-light)':'var(--pink-light)'};color:${n.male?'var(--blue)':'var(--pink)'};display:flex;align-items:center;justify-content:center;font-size:9px">${n.init}</div>
       <div style="font-size:11px;color:${n.id===id?'var(--text)':'var(--muted)'};font-weight:${n.id===id?500:400}">${n.name}${n.id===id?' — вы':''}</div>
@@ -252,7 +252,7 @@ function renderRatingTable(tab) {
 
   document.getElementById('ratingTableHead').innerHTML = tab === 'men' ? colsMen : colsWomen;
   document.getElementById('ratingTableBody').innerHTML = list.map((p, i) => `
-    <tr onclick="navigate('profile-detail', {profile: ${p.id}})" style="cursor:pointer">
+    <tr onclick="navigate('profile-detail', {profile: '${p.id}'})" style="cursor:pointer">
       <td><div class="rt-pos${i < 3 ? ' top' : ''}">${i + 1}</div></td>
       <td><div class="rt-ava" style="background:${p.male ? 'var(--blue-light)' : 'var(--pink-light)'};color:${p.male ? 'var(--blue)' : 'var(--pink)'}">${p.init}</div></td>
       <td><div class="rt-name">${p.name}, ${p.age}</div></td>
