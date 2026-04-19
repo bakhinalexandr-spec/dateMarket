@@ -490,17 +490,19 @@ textarea.form-input{resize:vertical;min-height:80px}
   </div>
 </div>
 
-<script src="js/data.js?v=7"></script>
-<script src="js/dashboard.js?v=7"></script>
-<script src="js/pages.js?v=7"></script>
-<script src="js/auth.js?v=7"></script>
-<script src="js/messages.js?v=7"></script>
-<script src="js/profile-edit.js?v=7"></script>
-<script src="js/admin.js?v=7"></script>
-<script src="js/gifts.js?v=7"></script>
-<script src="js/notifications.js?v=7"></script>
-<script src="js/mystats.js?v=7"></script>
-<script src="js/sharecard.js?v=7"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase.js?v=8"></script>
+<script src="js/data.js?v=8"></script>
+<script src="js/dashboard.js?v=8"></script>
+<script src="js/pages.js?v=8"></script>
+<script src="js/auth.js?v=8"></script>
+<script src="js/messages.js?v=8"></script>
+<script src="js/profile-edit.js?v=8"></script>
+<script src="js/admin.js?v=8"></script>
+<script src="js/gifts.js?v=8"></script>
+<script src="js/notifications.js?v=8"></script>
+<script src="js/mystats.js?v=8"></script>
+<script src="js/sharecard.js?v=8"></script>
 <script>
 
 function navigate(page, params={}) {
@@ -611,6 +613,13 @@ buildTicker();
 renderDashboard();
 renderDetailPanel(1);
 renderAllSparklines();
+
+supabase.auth.getSession().then(async ({ data: { session } }) => {
+  if (session) {
+    await loadAndSetProfile(session.user);
+    renderDashboard();
+  }
+});
 </script>
 </body>
 </html>
