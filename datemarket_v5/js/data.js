@@ -86,8 +86,62 @@ const PROFILES = {
   },
 };
 
+let REAL_PROFILES = null;
+
+const CITY_NAMES = { msk: 'Москва', spb: 'Санкт-Петербург', kzn: 'Казань', ekb: 'Екатеринбург', nsk: 'Новосибирск' };
+
+function mapSupabaseProfile(sp, likesCount, rank) {
+  const parts = (sp.name || '').split(' ');
+  const init = parts.length >= 2
+    ? (parts[0][0] + parts[1][0]).toUpperCase()
+    : (sp.name || '??').substring(0, 2).toUpperCase();
+  return {
+    id: sp.id,
+    init,
+    name: sp.name || 'Без имени',
+    age: sp.age || 0,
+    city: CITY_NAMES[sp.city] || sp.city || 'Россия',
+    cityKey: sp.city || 'msk',
+    rank,
+    likes: likesCount,
+    contacts: 0,
+    resp: 0,
+    respCount: '0 из 0',
+    level: sp.level || 1,
+    xp: sp.xp || 0,
+    admirers: 0,
+    online: false,
+    emoji: '👤',
+    wrote: 0,
+    unread: 0,
+    height: sp.height || null,
+    weight: sp.weight || null,
+    photo: sp.photo_url || null,
+    male: sp.gender === 'male',
+    wealth: 0,
+    about: sp.about || '',
+  };
+}
+
+async function loadRealProfiles() {
+  const { data: profiles, error } = await sb.from('profiles').select('*');
+  if (error || !profiles) { REAL_PROFILES = []; return []; }
+
+  const { data: likes } = await sb.from('likes').select('to_user');
+  const likesMap = {};
+  (likes || []).forEach(l => { likesMap[l.to_user] = (likesMap[l.to_user] || 0) + 1; });
+
+  const mapped = profiles.map(sp => mapSupabaseProfile(sp, likesMap[sp.id] || 0, 0));
+  mapped.sort((a, b) => b.likes - a.likes);
+  mapped.forEach((p, i) => { p.rank = i + 1; });
+
+  REAL_PROFILES = mapped;
+  return mapped;
+}
+
 /* all profiles flat */
 function allProfiles() {
+  if (REAL_PROFILES !== null) return REAL_PROFILES;
   return Object.values(PROFILES).flatMap(c => [...(c.women || []), ...(c.men || [])]);
 }
 
@@ -96,6 +150,11 @@ function getProfile(id) {
 }
 
 function cityProfiles(cityKey) {
+  if (REAL_PROFILES !== null) {
+    const women = REAL_PROFILES.filter(p => !p.male && p.cityKey === cityKey);
+    const men = REAL_PROFILES.filter(p => p.male && p.cityKey === cityKey);
+    return { women, men, all: REAL_PROFILES.filter(p => p.cityKey === cityKey) };
+  }
   const c = PROFILES[cityKey] || {};
   return { women: c.women || [], men: c.men || [], all: [...(c.women || []), ...(c.men || [])] };
 }
