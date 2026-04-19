@@ -123,7 +123,7 @@ function navigate(page, params = {}) {
   if (page === 'dashboard') renderDashboard();
   if (page === 'profiles') renderProfilesPage();
   if (page === 'rating') renderRatingPage();
-  if (page === 'profile-detail') renderProfileDetail(State.activeProfile);
+  if (page === 'profile-detail') renderProfileDetail(typeof params.profile === 'number' ? params.profile : State.activeProfile);
   window.scrollTo(0, 0);
 }
 
