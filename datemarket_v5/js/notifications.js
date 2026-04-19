@@ -45,6 +45,14 @@ function toggleNotifPanel() {
   if (panel.classList.contains('open')) renderNotifPanel();
 }
 
+document.addEventListener('click', function(e) {
+  const panel = document.getElementById('notif-panel');
+  if (!panel || !panel.classList.contains('open')) return;
+  if (!panel.contains(e.target) && !e.target.closest('.notif-bell-wrap')) {
+    panel.classList.remove('open');
+  }
+});
+
 function renderNotifPanel() {
   const list = document.getElementById('notif-panel-list');
   if (!list) return;
