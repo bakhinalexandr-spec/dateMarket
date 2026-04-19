@@ -42,13 +42,6 @@ function renderDashboard() {
   document.getElementById('topMaleWealth').textContent = '7.5';
   document.getElementById('topMaleMsgs').textContent = '156';
 
-  // Add top profile photo to hero card
-  const topProfile = cp.all.sort((a, b) => b.likes - a.likes)[0];
-  if (topProfile) {
-    document.getElementById('heroCardPhoto').src = topProfile.photo || 'https://i.pravatar.cc/100?img=1';
-    document.getElementById('heroCardProfileName').textContent = `${topProfile.name}, ${topProfile.age}`;
-  }
-
   document.querySelectorAll('.city-option').forEach(o => {
     o.classList.toggle('active', o.dataset.city === State.activeCity);
   });
