@@ -614,10 +614,14 @@ renderDashboard();
 renderDetailPanel(1);
 renderAllSparklines();
 
-sb.auth.getSession().then(async ({ data: { session } }) => {
-  if (session) {
+sb.auth.onAuthStateChange(async (event, session) => {
+  if (session && !State.auth) {
     await loadAndSetProfile(session.user);
     renderDashboard();
+  }
+  if (!session && State.auth) {
+    State.auth = null;
+    updateAuthUI();
   }
 });
 </script>
