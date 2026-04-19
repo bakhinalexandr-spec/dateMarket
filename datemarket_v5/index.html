@@ -494,7 +494,7 @@ textarea.form-input{resize:vertical;min-height:80px}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase.js?v=8"></script>
 <script src="js/data.js?v=13"></script>
-<script src="js/dashboard.js?v=8"></script>
+<script src="js/dashboard.js?v=9"></script>
 <script src="js/pages.js?v=9"></script>
 <script src="js/auth.js?v=8"></script>
 <script src="js/messages.js?v=8"></script>
@@ -613,23 +613,22 @@ function updateAuthUI(){
 buildTicker();
 renderAllSparklines();
 (async () => {
-  console.log('[init] IIFE started');
   await loadRealProfiles();
   renderDashboard();
   const first = allProfiles()[0];
-  if (first) renderDetailPanel(first.id);
-})();
+  if (first) { try { renderDetailPanel(first.id); } catch(e) {} }
 
-sb.auth.onAuthStateChange(async (event, session) => {
-  if (session && !State.auth) {
-    await loadAndSetProfile(session.user);
-    renderDashboard();
-  }
-  if (!session && State.auth) {
-    State.auth = null;
-    updateAuthUI();
-  }
-});
+  sb.auth.onAuthStateChange(async (event, session) => {
+    if (session && !State.auth) {
+      await loadAndSetProfile(session.user);
+      renderDashboard();
+    }
+    if (!session && State.auth) {
+      State.auth = null;
+      updateAuthUI();
+    }
+  });
+})();
 </script>
 </body>
 </html>
