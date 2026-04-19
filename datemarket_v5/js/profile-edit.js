@@ -112,10 +112,18 @@ function renderEditPage() {
       <div class="section-label">Мой профиль</div>
 
       <div style="display:flex;align-items:center;gap:16px;margin-bottom:28px;padding:20px;background:var(--surface);border-radius:3px">
-        <div style="width:56px;height:56px;border-radius:50%;background:${isFemale ? 'var(--pink-light)' : 'var(--blue-light)'};color:${isFemale ? 'var(--pink)' : 'var(--blue)'};display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:500">${(a.name||'?')[0].toUpperCase()}</div>
+        <div style="position:relative;cursor:pointer" onclick="document.getElementById('photo-input').click()" title="Сменить фото">
+          ${a.photo_url
+            ? `<img src="${a.photo_url}" style="width:56px;height:56px;border-radius:50%;object-fit:cover">`
+            : `<div style="width:56px;height:56px;border-radius:50%;background:${isFemale ? 'var(--pink-light)' : 'var(--blue-light)'};color:${isFemale ? 'var(--pink)' : 'var(--blue)'};display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:500">${(a.name||'?')[0].toUpperCase()}</div>`
+          }
+          <div style="position:absolute;bottom:0;right:0;width:18px;height:18px;background:var(--text);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--bg)">✎</div>
+        </div>
+        <input type="file" id="photo-input" accept="image/*" style="display:none" onchange="uploadPhoto(this)">
         <div>
           <div style="font-family:'Playfair Display',serif;font-size:20px">${a.name || 'Без имени'}, ${a.age || '—'}</div>
           <div style="font-size:11px;color:var(--faint)">${CITIES[a.city || 'msk']?.name || ''} · ${isFemale ? 'Девушка' : 'Мужчина'} · Уровень ${a.level || 1}</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:4px">Нажмите на фото чтобы сменить</div>
         </div>
         <div style="margin-left:auto;text-align:center">
           <div style="font-family:'Playfair Display',serif;font-size:28px;color:var(--amber)">${a.xp || 0}</div>
@@ -187,12 +195,32 @@ function wealthEditHTML(a) {
     </div>`;
 }
 
-function saveProfile() {
+async function uploadPhoto(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) { showNotif('Файл слишком большой (макс. 5MB)'); return; }
+
+  showNotif('Загружаем фото...');
+  const ext = file.name.split('.').pop();
+  const path = `${State.auth.id}/avatar.${ext}`;
+
+  const { error } = await sb.storage.from('avatars').upload(path, file, { upsert: true });
+  if (error) { showNotif('Ошибка загрузки: ' + error.message); return; }
+
+  const { data } = sb.storage.from('avatars').getPublicUrl(path);
+  State.auth.photo_url = data.publicUrl;
+
+  await sb.from('profiles').update({ photo_url: data.publicUrl }).eq('id', State.auth.id);
+  renderEditPage();
+  showNotif('Фото обновлено!');
+}
+
+async function saveProfile() {
   const a = State.auth;
   a.name = document.getElementById('edit-name').value.trim() || a.name;
-  a.age = document.getElementById('edit-age').value || a.age;
+  a.age  = parseInt(document.getElementById('edit-age').value) || a.age;
   a.city = document.getElementById('edit-city').value;
-  a.bio = document.getElementById('edit-bio')?.value || '';
+  a.bio  = document.getElementById('edit-bio')?.value || '';
 
   if (a.gender === 'female') {
     a.wishlist = [0,1,2].map(i => document.getElementById('wish-'+i)?.value || '').filter(Boolean);
@@ -200,19 +228,24 @@ function saveProfile() {
     a.wealth = parseFloat(document.getElementById('edit-wealth')?.value || 5);
   }
 
-  // XP reward for editing profile
-  if (!a.profileEdited) {
+  const firstEdit = !a.profileEdited;
+  if (firstEdit) {
     a.xp = (a.xp || 0) + 30;
     a.level = calcLevel(a.xp);
     a.profileEdited = true;
-    showNotif('+30 XP за заполнение профиля!');
-  } else {
-    showNotif('Профиль сохранён');
   }
+
+  const { error } = await sb.from('profiles').update({
+    name: a.name, age: a.age, city: a.city, about: a.bio,
+    level: a.level, xp: a.xp
+  }).eq('id', a.id);
+
+  if (error) { showNotif('Ошибка сохранения: ' + error.message); return; }
 
   State.activeCity = a.city;
   updateAuthUI();
   navigate('dashboard');
+  showNotif(firstEdit ? '+30 XP за заполнение профиля!' : 'Профиль сохранён');
 }
 
 function calcLevel(xp) {
