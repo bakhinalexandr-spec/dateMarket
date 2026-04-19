@@ -495,7 +495,7 @@ textarea.form-input{resize:vertical;min-height:80px}
 <script src="js/supabase.js?v=8"></script>
 <script src="js/data.js?v=13"></script>
 <script src="js/dashboard.js?v=11"></script>
-<script src="js/pages.js?v=12"></script>
+<script src="js/pages.js?v=13"></script>
 <script src="js/auth.js?v=8"></script>
 <script src="js/messages.js?v=8"></script>
 <script src="js/profile-edit.js?v=8"></script>
@@ -525,17 +525,6 @@ function navigate(page, params={}) {
   window.scrollTo(0,0);
 }
 
-const _origRPD = renderProfileDetail;
-function renderProfileDetail(id) {
-  _origRPD(id);
-  const p = getProfile(id);
-  if (!p) return;
-  const giftBtn = document.getElementById('pd-gift-btn');
-  if (giftBtn) {
-    giftBtn.style.display = (!p.male) ? 'block' : 'none';
-    if (!p.male) giftBtn.onclick = () => openGiftModal(id);
-  }
-}
 
 function handleDashWrite(){
   if(!State.auth){openModal('modal-login');return;}
