@@ -72,7 +72,7 @@ function renderCityCards() {
 function renderTop(cp) {
   const top = cp.all.sort((a, b) => b.likes - a.likes).slice(0, 5);
   document.getElementById('topList').innerHTML = top.map((p, i) => `
-    <div class="top-row" onclick="navigate('profile-detail', {profile: '${p.id}'})">
+    <div class="top-row" data-id="${p.id}" onclick="navigate('profile-detail',{profile:this.dataset.id})">
       <div class="tr-pos">${i + 1}</div>
       <div class="tr-ava ${p.male ? 'tr-ava-m' : 'tr-ava-f'}">${p.init}</div>
       <div class="tr-name">${p.name}, ${p.age}</div>
@@ -109,7 +109,7 @@ function profileCardHTML(p, active = false) {
     ? `<img class="profile-photo" src="${p.photo}" alt="${p.name}" loading="lazy">`
     : `<div class="profile-avatar${p.male ? ' m' : ''}">${p.init}</div>`;
   return `
-    <div class="profile-card${active ? ' active' : ''}" onclick="navigate('profile-detail', {profile: '${p.id}'})">
+    <div class="profile-card${active ? ' active' : ''}" data-id="${p.id}" onclick="navigate('profile-detail',{profile:this.closest('[data-id]').dataset.id})">
       <div class="profile-photo-area">
         ${photoHTML}
         <div class="rank-tag">#${p.rank}</div>

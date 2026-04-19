@@ -494,8 +494,8 @@ textarea.form-input{resize:vertical;min-height:80px}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase.js?v=8"></script>
 <script src="js/data.js?v=13"></script>
-<script src="js/dashboard.js?v=10"></script>
-<script src="js/pages.js?v=11"></script>
+<script src="js/dashboard.js?v=11"></script>
+<script src="js/pages.js?v=12"></script>
 <script src="js/auth.js?v=8"></script>
 <script src="js/messages.js?v=8"></script>
 <script src="js/profile-edit.js?v=8"></script>
@@ -507,6 +507,7 @@ textarea.form-input{resize:vertical;min-height:80px}
 <script>
 
 function navigate(page, params={}) {
+  console.log('[navigate]', page, params);
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   const el=document.getElementById('page-'+page);
   if(el){el.classList.add('active');State.currentPage=page;}
@@ -515,7 +516,7 @@ function navigate(page, params={}) {
   if(page==='dashboard') renderDashboard();
   if(page==='profiles') renderProfilesPage();
   if(page==='rating') renderRatingPage();
-  if(page==='profile-detail') renderProfileDetail(params.profile != null ? params.profile : State.activeProfile);
+  if(page==='profile-detail') { const pid = params.profile != null ? params.profile : State.activeProfile; console.log('[navigate] getProfile result:', getProfile(pid)); renderProfileDetail(pid); }
   if(page==='messages') renderMessagesPage();
   if(page==='levels') renderLevelsPage();
   if(page==='edit') renderEditPage();
