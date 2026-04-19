@@ -1,3 +1,29 @@
+/* ── GIFT CATALOG (used by wishlist rendering) ── */
+const PAGE_GIFTS = [
+  { name: 'Отпариватель ручной вертикальный KM-02', price: 1990, url: 'https://ozon.ru/t/7WaPLqK', emoji: '👗' },
+  { name: 'Пятновыводитель STIRALITI Professional 125г', price: 490, url: 'https://ozon.ru/t/1ETRWxk', emoji: '🧴' },
+  { name: 'Чемодан ABS пластик 55 см', price: 3290, url: 'https://ozon.ru/t/QipKjV6', emoji: '🧳' },
+  { name: 'Крем Lancôme Rénergie', price: 4290, url: 'https://www.ozon.ru/category/uhod-za-litsom/', emoji: '💆' },
+  { name: 'Аромадиффузор Zara Home', price: 1890, url: 'https://www.ozon.ru/category/aromadiffuzory/', emoji: '🕯️' },
+  { name: 'Серьги в форме полумесяца', price: 1290, url: 'https://www.ozon.ru/category/sergi/', emoji: '🌙' },
+  { name: 'Книга «Мастер и Маргарита»', price: 490, url: 'https://www.ozon.ru/category/knigi/', emoji: '📖' },
+  { name: 'Шоколадный сет Leonidas', price: 1650, url: 'https://www.ozon.ru/category/konfety-i-shokolad/', emoji: '🍫' },
+  { name: 'Термокружка Fellow Stagg', price: 3490, url: 'https://www.ozon.ru/category/termosy-termokruzhki/', emoji: '☕' },
+  { name: 'Набор сухоцветов в вазе', price: 1190, url: 'https://www.ozon.ru/category/sukhie-tsvety/', emoji: '🌾' },
+  { name: 'Маска для сна из шёлка', price: 690, url: 'https://www.ozon.ru/category/maski-dlya-sna/', emoji: '😴' },
+  { name: 'Подарочный сертификат Золотое Яблоко', price: 2000, url: 'https://www.ozon.ru/', emoji: '🎁' },
+];
+function getWishlist(profileId) {
+  const result = [], used = new Set();
+  let s = (profileId * 1000003 + 7) >>> 0;
+  while (result.length < 3) {
+    s = (s * 1664525 + 1013904223) >>> 0;
+    const i = s % PAGE_GIFTS.length;
+    if (!used.has(i)) { used.add(i); result.push(PAGE_GIFTS[i]); }
+  }
+  return result;
+}
+
 /* ── PROFILES PAGE ── */
 let profilesFilter = { gender: 'all', city: 'all', sort: 'likes', heightMin: 0, heightMax: 999, weightMin: 0, weightMax: 999 };
 
@@ -111,7 +137,7 @@ function renderProfileDetail(id) {
   // wishlist (only for women)
   const wlBlock = document.getElementById('pd-wishlist-block');
   if (!p.male) {
-    const wishes = profileWishlist(p.id);
+    const wishes = getWishlist(p.id);
     wlBlock.style.display = 'block';
     document.getElementById('pd-wishlist').innerHTML = wishes.map(w => `
       <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)">
