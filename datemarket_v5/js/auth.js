@@ -4,7 +4,7 @@ async function submitLogin() {
   const pass  = document.getElementById('login-password').value.trim();
   if (!email || !pass) { showNotif('Заполните все поля'); return; }
 
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password: pass });
+  const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
   if (error) { showNotif('Ошибка: ' + error.message); return; }
 
   await loadAndSetProfile(data.user);
@@ -25,10 +25,10 @@ async function submitRegister() {
 
   if (!name || !age || !email || !pass) { showNotif('Заполните все поля'); return; }
 
-  const { data, error } = await supabase.auth.signUp({ email, password: pass });
+  const { data, error } = await sb.auth.signUp({ email, password: pass });
   if (error) { showNotif('Ошибка: ' + error.message); return; }
 
-  const { error: pErr } = await supabase.from('profiles').insert({
+  const { error: pErr } = await sb.from('profiles').insert({
     id: data.user.id, name, age, gender, city, height, weight
   });
   if (pErr) { showNotif('Ошибка профиля: ' + pErr.message); return; }
@@ -48,14 +48,14 @@ async function submitRegister() {
 }
 
 async function logout() {
-  await supabase.auth.signOut();
+  await sb.auth.signOut();
   State.auth = null;
   updateAuthUI();
   showNotif('Вы вышли из аккаунта');
 }
 
 async function loadAndSetProfile(user) {
-  const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+  const { data: profile } = await sb.from('profiles').select('*').eq('id', user.id).single();
   State.auth = profile
     ? { ...profile, email: user.email }
     : { email: user.email, name: user.email.split('@')[0], level: 1, xp: 0 };
