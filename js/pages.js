@@ -111,12 +111,21 @@ function renderProfileDetail(id) {
   // wishlist (only for women)
   const wlBlock = document.getElementById('pd-wishlist-block');
   if (!p.male) {
-    const wishes = ['Духи Chanel', 'Книга «Мастер»', 'Уходовый крем'];
+    const wishes = profileWishlist(p.id);
     wlBlock.style.display = 'block';
     document.getElementById('pd-wishlist').innerHTML = wishes.map(w => `
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
-        <span style="font-size:12px;color:var(--muted)">${w}</span>
-        <button class="btn btn-ghost" style="font-size:9px;padding:4px 10px" onclick="showNotif('Подарок оформляется...')">Подарить</button>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)">
+        <div style="display:flex;align-items:center;gap:8px;min-width:0">
+          <span style="font-size:16px;flex-shrink:0">${w.emoji}</span>
+          <div style="min-width:0">
+            <a href="${w.url}" target="_blank" rel="noopener"
+               style="font-size:12px;color:var(--text);text-decoration:none;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"
+               onmouseover="this.style.color='var(--pink)'" onmouseout="this.style.color='var(--text)'">${w.name}</a>
+            <span style="font-size:10px;color:var(--faint)">${w.price.toLocaleString('ru-RU')} ₽ · Ozon</span>
+          </div>
+        </div>
+        <button class="btn btn-ghost" style="font-size:9px;padding:4px 10px;flex-shrink:0;margin-left:10px"
+          onclick="showNotif('🎁 Подарок оформляется...')">Подарить</button>
       </div>`).join('');
   } else {
     wlBlock.style.display = 'none';

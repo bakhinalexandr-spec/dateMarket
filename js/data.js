@@ -1,4 +1,30 @@
 ﻿/* ── DATA ── */
+
+/* ── GIFT CATALOG ── */
+const GIFT_CATALOG = [
+  { name: 'Духи Maison Margiela Replica', price: 5490, url: 'https://ozon.ru/t/7WaPLqK', emoji: '🌸' },
+  { name: 'Набор для ухода за кожей', price: 2190, url: 'https://ozon.ru/t/1ETRWxk', emoji: '✨' },
+  { name: 'Шёлковая лента для волос', price: 890,  url: 'https://ozon.ru/t/QipKjV6', emoji: '🎀' },
+  { name: 'Крем Lancôme Rénergie', price: 4290, url: 'https://www.ozon.ru/category/uhod-za-litsom/', emoji: '💆' },
+  { name: 'Аромадиффузор Zara Home', price: 1890, url: 'https://www.ozon.ru/category/aromadiffuzory/', emoji: '🕯️' },
+  { name: 'Серьги в форме полумесяца', price: 1290, url: 'https://www.ozon.ru/category/sergi/', emoji: '🌙' },
+  { name: 'Книга «Мастер и Маргарита»', price: 490,  url: 'https://www.ozon.ru/category/knigi/', emoji: '📖' },
+  { name: 'Шоколадный сет Leonidas', price: 1650, url: 'https://www.ozon.ru/category/konfety-i-shokolad/', emoji: '🍫' },
+  { name: 'Термокружка Fellow Stagg', price: 3490, url: 'https://www.ozon.ru/category/termosy-termokruzhki/', emoji: '☕' },
+  { name: 'Набор сухоцветов в вазе', price: 1190, url: 'https://www.ozon.ru/category/sukhie-tsvety/', emoji: '🌾' },
+  { name: 'Маска для сна из шёлка', price: 690,  url: 'https://www.ozon.ru/category/maski-dlya-sna/', emoji: '😴' },
+  { name: 'Подарочный сертификат Золотое Яблоко', price: 2000, url: 'https://www.ozon.ru/', emoji: '🎁' },
+];
+
+/* назначить 3 рандомных подарка по seed из id профиля */
+function profileWishlist(profileId) {
+  const shuffled = GIFT_CATALOG.slice().sort((a, b) =>
+    Math.sin(profileId * 9301 + GIFT_CATALOG.indexOf(a) * 49297) -
+    Math.sin(profileId * 9301 + GIFT_CATALOG.indexOf(b) * 49297)
+  );
+  return shuffled.slice(0, 3);
+}
+
 /* ── GLOBAL PLATFORM STATS ── */
 const PLATFORM_STATS = {
   msk: { total: 8470, new24: 47, reply2: 28 },
