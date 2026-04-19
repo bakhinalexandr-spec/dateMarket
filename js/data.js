@@ -2,9 +2,9 @@
 
 /* ── GIFT CATALOG ── */
 const GIFT_CATALOG = [
-  { name: 'Духи Maison Margiela Replica', price: 5490, url: 'https://ozon.ru/t/7WaPLqK', emoji: '🌸' },
-  { name: 'Набор для ухода за кожей', price: 2190, url: 'https://ozon.ru/t/1ETRWxk', emoji: '✨' },
-  { name: 'Шёлковая лента для волос', price: 890,  url: 'https://ozon.ru/t/QipKjV6', emoji: '🎀' },
+  { name: 'Отпариватель ручной вертикальный KM-02', price: 1990, url: 'https://ozon.ru/t/7WaPLqK', emoji: '👗' },
+  { name: 'Пятновыводитель STIRALITI Professional 125г', price: 490,  url: 'https://ozon.ru/t/1ETRWxk', emoji: '🧴' },
+  { name: 'Чемодан ABS пластик 55 см', price: 3290, url: 'https://ozon.ru/t/QipKjV6', emoji: '🧳' },
   { name: 'Крем Lancôme Rénergie', price: 4290, url: 'https://www.ozon.ru/category/uhod-za-litsom/', emoji: '💆' },
   { name: 'Аромадиффузор Zara Home', price: 1890, url: 'https://www.ozon.ru/category/aromadiffuzory/', emoji: '🕯️' },
   { name: 'Серьги в форме полумесяца', price: 1290, url: 'https://www.ozon.ru/category/sergi/', emoji: '🌙' },
