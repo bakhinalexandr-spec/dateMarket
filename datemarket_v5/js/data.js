@@ -127,9 +127,10 @@ async function loadRealProfiles() {
   console.log('[loadRealProfiles] called, sb:', typeof sb);
   let profiles, error;
   try {
-    ({ data: profiles, error } = await sb.from('profiles').select('*'));
+    const timeout = new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 5000));
+    ({ data: profiles, error } = await Promise.race([sb.from('profiles').select('*'), timeout]));
   } catch(e) {
-    console.error('[loadRealProfiles] exception:', e);
+    console.error('[loadRealProfiles] exception:', e.message);
     REAL_PROFILES = [];
     return [];
   }
