@@ -188,6 +188,8 @@ async function renderLikeBtn(profileId) {
   const btn = document.getElementById('pd-like-btn');
   if (!btn) return;
 
+  btn.onclick = () => toggleLike(profileId);
+
   const { count } = await sb.from('likes')
     .select('*', { count: 'exact', head: true })
     .eq('to_user', profileId);
@@ -204,7 +206,6 @@ async function renderLikeBtn(profileId) {
   btn.style.background = liked ? 'var(--pink)' : '';
   btn.style.color = liked ? 'white' : '';
   btn.style.borderColor = liked ? 'var(--pink)' : '';
-  btn.onclick = () => toggleLike(profileId);
 }
 
 async function toggleLike(profileId) {
