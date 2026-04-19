@@ -493,7 +493,7 @@ textarea.form-input{resize:vertical;min-height:80px}
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase.js?v=8"></script>
-<script src="js/data.js?v=8"></script>
+<script src="js/data.js?v=9"></script>
 <script src="js/dashboard.js?v=8"></script>
 <script src="js/pages.js?v=9"></script>
 <script src="js/auth.js?v=8"></script>
@@ -511,11 +511,11 @@ function navigate(page, params={}) {
   const el=document.getElementById('page-'+page);
   if(el){el.classList.add('active');State.currentPage=page;}
   document.querySelectorAll('.nav-links a').forEach(a=>a.classList.toggle('active',a.dataset.page===page));
-  if(typeof params.profile==='number') State.activeProfile=params.profile;
+  if(params.profile != null) State.activeProfile = params.profile;
   if(page==='dashboard') renderDashboard();
   if(page==='profiles') renderProfilesPage();
   if(page==='rating') renderRatingPage();
-  if(page==='profile-detail') renderProfileDetail(typeof params.profile==='number' ? params.profile : State.activeProfile);
+  if(page==='profile-detail') renderProfileDetail(params.profile != null ? params.profile : State.activeProfile);
   if(page==='messages') renderMessagesPage();
   if(page==='levels') renderLevelsPage();
   if(page==='edit') renderEditPage();
@@ -611,9 +611,13 @@ function updateAuthUI(){
 }
 
 buildTicker();
-renderDashboard();
-renderDetailPanel(1);
 renderAllSparklines();
+(async () => {
+  await loadRealProfiles();
+  renderDashboard();
+  const first = allProfiles()[0];
+  if (first) renderDetailPanel(first.id);
+})();
 
 sb.auth.onAuthStateChange(async (event, session) => {
   if (session && !State.auth) {
