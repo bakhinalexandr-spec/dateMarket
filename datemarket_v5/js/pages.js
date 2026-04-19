@@ -182,6 +182,13 @@ function renderProfileDetail(id) {
 
   // like button
   renderLikeBtn(id);
+
+  // gift button
+  const giftBtn = document.getElementById('pd-gift-btn');
+  if (giftBtn) {
+    giftBtn.style.display = (!p.male) ? 'block' : 'none';
+    if (!p.male) giftBtn.onclick = () => openGiftModal(id);
+  }
 }
 
 async function renderLikeBtn(profileId) {
