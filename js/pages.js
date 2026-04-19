@@ -179,6 +179,49 @@ function renderProfileDetail(id) {
     writeBtn.onclick = () => openModal('modal-login');
     writeNote.textContent = 'Войдите, чтобы написать';
   }
+
+  // like button
+  renderLikeBtn(id);
+}
+
+async function renderLikeBtn(profileId) {
+  const btn = document.getElementById('pd-like-btn');
+  if (!btn) return;
+
+  const { count } = await sb.from('likes')
+    .select('*', { count: 'exact', head: true })
+    .eq('to_user', profileId);
+
+  let liked = false;
+  if (State.auth) {
+    const { data } = await sb.from('likes')
+      .select('id').eq('from_user', State.auth.id).eq('to_user', profileId)
+      .maybeSingle();
+    liked = !!data;
+  }
+
+  btn.textContent = liked ? `♥ Лайкнуто (${count || 0})` : `♡ Лайк (${count || 0})`;
+  btn.style.background = liked ? 'var(--pink)' : '';
+  btn.style.color = liked ? 'white' : '';
+  btn.style.borderColor = liked ? 'var(--pink)' : '';
+  btn.onclick = () => toggleLike(profileId);
+}
+
+async function toggleLike(profileId) {
+  if (!State.auth) { openModal('modal-login'); return; }
+  if (State.auth.id === profileId) { showNotif('Нельзя лайкнуть себя'); return; }
+
+  const { data: existing } = await sb.from('likes')
+    .select('id').eq('from_user', State.auth.id).eq('to_user', profileId)
+    .maybeSingle();
+
+  if (existing) {
+    await sb.from('likes').delete().eq('id', existing.id);
+  } else {
+    await sb.from('likes').insert({ from_user: State.auth.id, to_user: profileId });
+  }
+
+  renderLikeBtn(profileId);
 }
 
 /* ── RATING PAGE ── */
