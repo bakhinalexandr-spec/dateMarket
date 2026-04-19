@@ -497,17 +497,17 @@ textarea.form-input{resize:vertical;min-height:80px}
   </div>
 </div>
 
-<script src="js/data.js?v=6"></script>
-<script src="js/dashboard.js?v=6"></script>
-<script src="js/pages.js?v=6"></script>
-<script src="js/auth.js?v=6"></script>
-<script src="js/messages.js?v=6"></script>
-<script src="js/profile-edit.js?v=6"></script>
-<script src="js/admin.js?v=6"></script>
-<script src="js/gifts.js?v=6"></script>
-<script src="js/notifications.js?v=6"></script>
-<script src="js/mystats.js?v=6"></script>
-<script src="js/sharecard.js?v=6"></script>
+<script src="js/data.js?v=7"></script>
+<script src="js/dashboard.js?v=7"></script>
+<script src="js/pages.js?v=7"></script>
+<script src="js/auth.js?v=7"></script>
+<script src="js/messages.js?v=7"></script>
+<script src="js/profile-edit.js?v=7"></script>
+<script src="js/admin.js?v=7"></script>
+<script src="js/gifts.js?v=7"></script>
+<script src="js/notifications.js?v=7"></script>
+<script src="js/mystats.js?v=7"></script>
+<script src="js/sharecard.js?v=7"></script>
 <script>
 
 function navigate(page, params={}) {
@@ -519,7 +519,7 @@ function navigate(page, params={}) {
   if(page==='dashboard') renderDashboard();
   if(page==='profiles') renderProfilesPage();
   if(page==='rating') renderRatingPage();
-  if(page==='profile-detail') renderProfileDetail(State.activeProfile);
+  if(page==='profile-detail') renderProfileDetail(typeof params.profile==='number' ? params.profile : State.activeProfile);
   if(page==='messages') renderMessagesPage();
   if(page==='levels') renderLevelsPage();
   if(page==='edit') renderEditPage();
