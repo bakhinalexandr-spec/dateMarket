@@ -273,12 +273,26 @@ nav {
 .dashboard { padding: 28px; border-right: 1px solid var(--border); }
 
 .home-page { padding: 28px; }
-.home-hero { display: grid; grid-template-columns: 1.4fr 1fr; gap: 24px; align-items: center; margin-bottom: 32px; }
+.hero {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 40px;
+  align-items: center;
+  padding: 64px 52px;
+  border-radius: 20px;
+  margin-bottom: 36px;
+  background: radial-gradient(ellipse at 25% 60%, rgba(201,79,109,0.22) 0%, transparent 55%),
+              radial-gradient(ellipse at 75% 35%, rgba(138,96,32,0.16) 0%, transparent 50%),
+              radial-gradient(ellipse at 50% 100%, rgba(26,122,94,0.1) 0%, transparent 50%),
+              linear-gradient(145deg, #1c1917 0%, #1a1814 100%);
+}
 .hero-tag { font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--pink); margin-bottom: 14px; }
-.hero-title { font-family: 'Playfair Display', serif; font-size: 42px; line-height: 1.05; margin-bottom: 20px; max-width: 620px; }
-.hero-text { max-width: 560px; color: var(--muted); margin-bottom: 24px; }
+.hero-title { font-family: 'Playfair Display', serif; font-size: 48px; line-height: 1.05; margin-bottom: 20px; max-width: 620px; color: var(--bg); }
+.hero-text { max-width: 520px; color: rgba(245,242,237,0.6); margin-bottom: 28px; line-height: 1.7; }
 .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
-.hero-card { background: var(--surface); border-radius: 18px; padding: 24px; box-shadow: 0 24px 60px rgba(0,0,0,0.08); }
+.hero .btn-ghost { border-color: rgba(245,242,237,0.3); color: var(--bg); }
+.hero .btn-ghost:hover { background: rgba(245,242,237,0.08); }
+.hero-card { background: var(--surface); border-radius: 18px; padding: 24px; box-shadow: 0 12px 32px rgba(0,0,0,0.12); }
 .hero-card-title { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); margin-bottom: 10px; }
 .hero-card-city { font-family: 'Playfair Display', serif; font-size: 32px; margin-bottom: 4px; }
 .hero-card-sub { font-size: 11px; color: var(--muted); margin-bottom: 18px; }
@@ -299,7 +313,7 @@ nav {
 .city-card-row { display: flex; justify-content: space-between; gap: 8px; font-size: 11px; color: var(--muted); }
 .city-badge { font-size: 10px; color: var(--text); background: var(--bg); border-radius: 999px; padding: 5px 10px; }
 @media (max-width: 900px) {
-  .home-hero { grid-template-columns: 1fr; }
+  .hero { grid-template-columns: 1fr; gap: 24px; padding: 40px 28px; }
   .recommend-grid { grid-template-columns: repeat(2, 1fr); }
   .home-stat-row { grid-template-columns: 1fr; }
   .city-grid { grid-template-columns: repeat(2, 1fr); }
