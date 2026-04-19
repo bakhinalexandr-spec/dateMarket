@@ -125,7 +125,14 @@ function mapSupabaseProfile(sp, likesCount, rank) {
 
 async function loadRealProfiles() {
   console.log('[loadRealProfiles] called, sb:', typeof sb);
-  const { data: profiles, error } = await sb.from('profiles').select('*');
+  let profiles, error;
+  try {
+    ({ data: profiles, error } = await sb.from('profiles').select('*'));
+  } catch(e) {
+    console.error('[loadRealProfiles] exception:', e);
+    REAL_PROFILES = [];
+    return [];
+  }
   console.log('[loadRealProfiles] result:', profiles, error);
   if (error || !profiles) { REAL_PROFILES = []; return []; }
 
