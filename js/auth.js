@@ -1,29 +1,39 @@
 /* ── AUTH ── */
-function submitLogin() {
+async function submitLogin() {
   const email = document.getElementById('login-email').value.trim();
-  const pass = document.getElementById('login-password').value.trim();
+  const pass  = document.getElementById('login-password').value.trim();
   if (!email || !pass) { showNotif('Заполните все поля'); return; }
 
-  // simulate auth
-  State.auth = { email, name: email.split('@')[0], gender: 'male', city: 'msk' };
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password: pass });
+  if (error) { showNotif('Ошибка: ' + error.message); return; }
+
+  await loadAndSetProfile(data.user);
   closeModal('modal-login');
-  updateAuthUI();
+  renderDashboard();
   showNotif('Добро пожаловать!');
 }
 
-function submitRegister() {
-  const name = document.getElementById('reg-name').value.trim();
-  const age = document.getElementById('reg-age').value.trim();
+async function submitRegister() {
+  const name   = document.getElementById('reg-name').value.trim();
+  const age    = parseInt(document.getElementById('reg-age').value) || null;
   const gender = document.getElementById('reg-gender').value;
-  const city = document.getElementById('reg-city').value;
-  const email = document.getElementById('reg-email').value.trim();
-  const pass = document.getElementById('reg-password').value.trim();
+  const city   = document.getElementById('reg-city').value;
+  const email  = document.getElementById('reg-email').value.trim();
+  const pass   = document.getElementById('reg-password').value.trim();
   const height = parseInt(document.getElementById('reg-height').value) || null;
   const weight = parseInt(document.getElementById('reg-weight').value) || null;
 
   if (!name || !age || !email || !pass) { showNotif('Заполните все поля'); return; }
 
-  State.auth = { name, age, gender, city, email, height, weight };
+  const { data, error } = await supabase.auth.signUp({ email, password: pass });
+  if (error) { showNotif('Ошибка: ' + error.message); return; }
+
+  const { error: pErr } = await supabase.from('profiles').insert({
+    id: data.user.id, name, age, gender, city, height, weight
+  });
+  if (pErr) { showNotif('Ошибка профиля: ' + pErr.message); return; }
+
+  State.auth = { id: data.user.id, name, age, gender, city, height, weight, email, level: 1, xp: 0 };
   State.activeCity = city;
   closeModal('modal-register');
   updateAuthUI();
@@ -37,25 +47,20 @@ function submitRegister() {
   renderDashboard();
 }
 
-function logout() {
+async function logout() {
+  await supabase.auth.signOut();
   State.auth = null;
   updateAuthUI();
   showNotif('Вы вышли из аккаунта');
 }
 
-function updateAuthUI() {
-  const navActions = document.getElementById('navActions');
-  if (State.auth) {
-    navActions.innerHTML = `
-      <span style="font-size:11px;color:var(--muted);letter-spacing:0.04em">${State.auth.name}</span>
-      <button class="btn btn-ghost" onclick="logout()">Выйти</button>
-    `;
-  } else {
-    navActions.innerHTML = `
-      <button class="btn btn-ghost" onclick="openModal('modal-login')">Войти</button>
-      <button class="btn btn-primary" onclick="openModal('modal-register')">Создать анкету</button>
-    `;
-  }
+async function loadAndSetProfile(user) {
+  const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+  State.auth = profile
+    ? { ...profile, email: user.email }
+    : { email: user.email, name: user.email.split('@')[0], level: 1, xp: 0 };
+  State.activeCity = State.auth.city || 'msk';
+  updateAuthUI();
 }
 
 /* ── GIFT WHEEL ── */
